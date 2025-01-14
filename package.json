@@ -1,0 +1,23 @@
+{
+  "name": "user-controller-app-be",
+  "version": "1.0.0",
+  "description": "Back End for user controller app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/t2makela/user-controller-app-be.git"
+  },
+  "keywords": [
+    "express",
+    "sqllite"
+  ],
+  "author": "t2makela",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/t2makela/user-controller-app-be/issues"
+  },
+  "homepage": "https://github.com/t2makela/user-controller-app-be#readme"
+}
