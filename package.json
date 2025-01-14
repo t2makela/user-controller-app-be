@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/t2makela/user-controller-app-be/issues"
   },
-  "homepage": "https://github.com/t2makela/user-controller-app-be#readme"
+  "homepage": "https://github.com/t2makela/user-controller-app-be#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
 }
