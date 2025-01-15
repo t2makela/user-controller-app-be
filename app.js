@@ -96,8 +96,13 @@ app.post('/api/users', async (req, res) => {
 app.put('/api/users/:id', async (req, res) => {
     const user = await User.findByPk(req.params.id);
     if (user) {
-      await user.update(req.body);
-      res.json(user);
+        try {
+            await user.update(req.body);
+            res.json(user);
+        } catch (err) {
+            const errors = solveSqlErrors(err);
+            res.json(errors);
+        }
     } else {
       res.status(404).json({ message: 'User not found' });
     }
