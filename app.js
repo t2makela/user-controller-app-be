@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { Sequelize, Model, DataTypes } = require('sequelize');
+const { solveSqlErrors } = require("./helpers/sqlErrorSolver")
 
 const app = express();
 const port = 3000;
@@ -14,11 +15,55 @@ const sequelize = new Sequelize({
 // Define User model
 class User extends Model {}
 User.init({
-  name: DataTypes.STRING,
-  username: DataTypes.STRING,
-  email: DataTypes.STRING,
-  phone: DataTypes.STRING,
-  website: DataTypes.STRING
+    id: { 
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+    },
+    name: {
+        type: DataTypes.STRING,
+        allowNull:false,
+        validate: {
+           len: {
+            args:[3, 30],
+            msg: "Length must be between 3 and 30"
+            }
+        }
+    },
+    username: {
+        type: DataTypes.STRING,
+        allowNull:false,
+        unique: true,
+        validate: {
+            len: {
+            args:[3, 30],
+            msg: "Length must be between 3 and 30"
+            }
+        }
+    },
+    email: {
+        type: DataTypes.STRING,
+        allowNull:false,
+        validate: {
+            isEmail: true,
+            notEmpty: true,
+            notNull: true 
+        }
+    },
+    phone: { 
+        type: DataTypes.STRING,
+        allowNull:false,
+        validate: {
+            len: [5, 10],
+        }
+        
+    },
+    website: {
+        type: DataTypes.STRING,
+        validate: {
+            isUrl: true
+        }
+    }
 }, { sequelize, modelName: 'user' });
 
 // Sync models with database
@@ -38,8 +83,13 @@ app.get('/api/users', async (req, res) => {
 
 // Add user
 app.post('/api/users', async (req, res) => {
-    const user = await User.create(req.body);
-    res.json(user);
+    try {
+       const user = await User.create(req.body);
+       res.json(user);
+    } catch (err) {
+        const errors = solveSqlErrors(err);
+        res.json(errors);
+    }
   });
 
 // Modify user
@@ -52,7 +102,7 @@ app.put('/api/users/:id', async (req, res) => {
       res.status(404).json({ message: 'User not found' });
     }
   });
-  
+
 // Delete user  
   app.delete('/api/users/:id', async (req, res) => {
     const user = await User.findByPk(req.params.id);
